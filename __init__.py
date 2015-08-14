@@ -25,7 +25,7 @@ __all__ = ('CircularLayout')
 
 from kivy.uix.layout import Layout
 from kivy.properties import NumericProperty, ReferenceListProperty, OptionProperty, \
-                            BoundedNumericProperty, VariableListProperty
+                            BoundedNumericProperty, VariableListProperty, AliasProperty
 from math import sin, cos, pi, radians, degrees
 
 
@@ -94,6 +94,13 @@ class CircularLayout(Layout):
 
     :attr:`radius_hint` is a :class:`~kivy.properties.ReferenceListProperty`.
     '''
+
+    def _get_delta_radii(self):
+        radius = min(self.width-self.padding[0]-self.padding[2], self.height-self.padding[1]-self.padding[3]) / 2.
+        outer_r = radius * self.outer_radius_hint
+        inner_r = radius * self.inner_radius_hint
+        return outer_r - inner_r
+    delta_radii = AliasProperty(_get_delta_radii, None, bind=("radius_hint", "padding", "size"))
 
     def __init__(self, **kwargs):
         super(CircularLayout, self).__init__(**kwargs)
